@@ -39,12 +39,13 @@ def DisplayGraph(plotter):
     plt.interactive(False)
     plt.show(block=True)
 
-threshold = 0.5
+#####################################################################################################
+#######################################  Main   #####################################################
+#####################################################################################################
 #  Main Start Program HERE
 # Import data as Integers and remove labels
 training_data = np.genfromtxt('MNIST_training.csv', delimiter=',', dtype=int, skip_header=1)
 test_data = np.genfromtxt('MNIST_test.csv', delimiter=',', dtype=int, skip_header=1)
-
 
 # Make array of labels
 y_training = np.array(training_data[:, 0])
@@ -59,32 +60,21 @@ x_test = np.array(test_data[:, 1:])
 x_training = NormalizeData(x_training)
 x_test = NormalizeData(x_test)
 
+# Threshold for Classes
+threshold = 0.5
+
 #  Linear Regression
 b_opt = LinearRegression(x_training, y_training)  # Calculate b
-
-
-# Print b_opt
-print("b_opt: ", b_opt)
-
-# result_opt = Classify_Prediction(x_test, b_opt, threshold) # Make prediction
-# accuracy_opt = sum(result_opt == y_test) / len(y_test) # Classify accuracy
-
 accuracy_opt = CalculateResults(x_test,y_test, b_opt, threshold)
 
 #   Gradient Decent
-
-# Normalize Data Min-Max
-# x_training = NormalizeData(x_training)
-# x_test = NormalizeData(x_test)
-
-
 b_est = np.zeros(len(x_training[0])) # Array of zeros for each feature
 learn_rate = 1e-4
 r = 100
 
 aggregate = []
 for i in range(0, r):
-    # print(b_est)
+    # Iterativly Calculates b_est based on learning rate and gradient decent
     b_est  = b_est - learn_rate * GradDecent(x_training, y_training, b_est)
 
     # Calculate cost for graph
@@ -92,18 +82,14 @@ for i in range(0, r):
     aggregate.append(cost)
 
 
-print("b_est: ", b_est)
-# result_opt = Classify_Prediction(x_test, b_est, threshold) # Make prediction
-# accuracy_est = sum(result_opt == y_test) / len(y_test) # Classify accuracy
-accuracy_est = CalculateResults(x_test,y_test, b_opt, threshold)
+accuracy_est = CalculateResults(x_test,y_test, b_est, threshold)
 
 # Display Accuracy
 bdiff = sum(abs(b_opt - b_est))
+print("b_opt: ", b_opt)
+print("b_est: ", b_est)
 print("b_opt accuracy", accuracy_opt)
 print("b_est accuracy", accuracy_est)
 print("B Diff: ", bdiff)
 
 DisplayGraph(aggregate)
-
-
-
