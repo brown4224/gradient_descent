@@ -1,14 +1,20 @@
 #Sean McGlincy
 # Machine Learning
 # HW 2
-import numpy as np
+
 # Requires
+# Running Python 3.6
 # Linux:  sudo yum install tkinter python36u-tkinter
 
+import numpy as np
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
+
+#####################################################################################################
+###################################  Functions   ####################################################
+#####################################################################################################
 
 def CalculateResults(X, Y, b, threshold):
     result_opt = Classify_Prediction(X, b, threshold)  # Make prediction
@@ -30,7 +36,6 @@ def GradDecent(X, y, b):
 
 def Cost(X, y, b):
     return np.sum(np.dot(X, b) - y)**2
-
 
 
 def DisplayGraph(plotter):
@@ -56,9 +61,9 @@ x_training = np.array(training_data[:, 1:])
 x_test = np.array(test_data[:, 1:])
 
 
-# Normalize Data Min-Max
-x_training = NormalizeData(x_training)
-x_test = NormalizeData(x_test)
+# # Normalize Data Min-Max
+# x_training = NormalizeData(x_training)
+# x_test = NormalizeData(x_test)
 
 # Threshold for Classes
 threshold = 0.5
@@ -68,18 +73,25 @@ b_opt = LinearRegression(x_training, y_training)  # Calculate b
 accuracy_opt = CalculateResults(x_test,y_test, b_opt, threshold)
 
 #   Gradient Decent
+
+#
+# Normalize Data Min-Max
+x_training = NormalizeData(x_training)
+x_test = NormalizeData(x_test)
+
+
 b_est = np.zeros(len(x_training[0])) # Array of zeros for each feature
 learn_rate = 1e-4
 r = 100
 
-aggregate = []
+plot = []
 for i in range(0, r):
     # Iterativly Calculates b_est based on learning rate and gradient decent
     b_est  = b_est - learn_rate * GradDecent(x_training, y_training, b_est)
 
     # Calculate cost for graph
     cost = Cost(x_training, y_training, b_est)
-    aggregate.append(cost)
+    plot.append(cost)
 
 
 accuracy_est = CalculateResults(x_test,y_test, b_est, threshold)
@@ -92,4 +104,4 @@ print("b_opt accuracy", accuracy_opt)
 print("b_est accuracy", accuracy_est)
 print("B Diff: ", bdiff)
 
-DisplayGraph(aggregate)
+DisplayGraph(plot)
